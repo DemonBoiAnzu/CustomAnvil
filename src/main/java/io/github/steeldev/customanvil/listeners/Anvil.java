@@ -27,23 +27,32 @@ public class Anvil implements Listener {
         ItemMeta meta = resultItem.getItemMeta();
         meta.setDisplayName(event.getInventory().getRenameText());
         resultItem.setItemMeta(meta);
-        int finalLevel = 0;
         Map<Enchantment, Integer> slot2Enchants = (slot2.getType().equals(Material.ENCHANTED_BOOK)) ?
                 ((EnchantmentStorageMeta) slot2.getItemMeta()).getStoredEnchants() : slot2.getEnchantments();
-        Map<Enchantment, Integer> slot1Enchants = (slot2.getType().equals(Material.ENCHANTED_BOOK)) ?
-                ((EnchantmentStorageMeta) slot2.getItemMeta()).getStoredEnchants() : slot2.getEnchantments();
+        Map<Enchantment, Integer> slot1Enchants = (slot1.getType().equals(Material.ENCHANTED_BOOK)) ?
+                ((EnchantmentStorageMeta) slot1.getItemMeta()).getStoredEnchants() : slot1.getEnchantments();
         for (Enchantment enchantment : slot2Enchants.keySet()) {
             if (slot1Enchants.containsKey(enchantment)) {
+                int slot1Level = (slot1.getType().equals(Material.ENCHANTED_BOOK)) ?
+                        ((EnchantmentStorageMeta) slot1.getItemMeta()).getStoredEnchantLevel(enchantment) : slot1.getEnchantmentLevel(enchantment);
+                int slot2Level = (slot2.getType().equals(Material.ENCHANTED_BOOK)) ?
+                        ((EnchantmentStorageMeta) slot2.getItemMeta()).getStoredEnchantLevel(enchantment) : slot2.getEnchantmentLevel(enchantment);
                 int newLvl = (main.config.ADD_LEVELS_LITERAL) ?
-                        slot1.getEnchantmentLevel(enchantment) + slot2.getEnchantmentLevel(enchantment) :
-                        slot1.getEnchantmentLevel(enchantment) + 1;
-                finalLevel += newLvl;
-                resultItem.removeEnchantment(enchantment);
-                resultItem.addUnsafeEnchantment(enchantment, newLvl);
+                        slot1Level + slot2Level :
+                        slot2Level + 1;
+                event.getInventory().setRepairCost(event.getInventory().getRepairCost() + newLvl);
+                if (resultItem.getItemMeta() instanceof EnchantmentStorageMeta) {
+                    EnchantmentStorageMeta enchantmentStorageMeta = (EnchantmentStorageMeta) resultItem.getItemMeta();
+                    enchantmentStorageMeta.removeStoredEnchant(enchantment);
+                    enchantmentStorageMeta.addStoredEnchant(enchantment, newLvl, true);
+                    resultItem.setItemMeta(enchantmentStorageMeta);
+                } else {
+                    resultItem.removeEnchantment(enchantment);
+                    resultItem.addUnsafeEnchantment(enchantment, newLvl);
+                }
             }
         }
         if (slot1.equals(resultItem)) return;
         event.setResult(resultItem);
-        event.getInventory().setRepairCost(event.getInventory().getRepairCost() + finalLevel);
     }
 }
