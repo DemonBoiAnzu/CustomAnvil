@@ -1,0 +1,8 @@
+# Do you want to add the levels together?
+#  e.g Level 10 + Level 10 will give level 20
+# Turned off, Level 10 + Level 10 (or level 1) will give level 11
+addLevelsLiteral: true
+
+resourcePackURL: https://www.dropbox.com/s/xbgupscn691ukuv/CustomAnvil_ResourcePack.zip?dl=1
+enableResourcePack: true
+forceResourcePack: true

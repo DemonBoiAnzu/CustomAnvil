@@ -1,0 +1,7 @@
+target/*
+dependency-reduced-pom.xml
+server/*
+*/server
+*/target
+.idea/*
+/server/

@@ -1,0 +1,5 @@
+name: CustomAnvil
+main: io.github.steeldev.customanvil.CustomAnvil
+version: ${project.version}
+api-version: 1.17
+description: Allows for combining enchantments in an anvil to go over their max level.
